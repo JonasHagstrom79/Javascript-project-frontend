@@ -91,7 +91,7 @@ export class RESTDataSource extends DataSource {
 	*/
 	async deletePerson(socialSecurityNumber) { //deleteMyCourse
 		
-		return this.getData('/api/persons' + socialSecurityNumber, 'DELETE');
+		return this.getData('/api/persons/' + socialSecurityNumber, 'DELETE');
 		
 	}
 

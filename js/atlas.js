@@ -51,14 +51,17 @@ export class Atlas {
 	}
 
 	/**
-	* Add a My course to Atlas.
+	* Add a person to Atlas.
 	* @param courseCode the course code for the course to be added
 	* @param grade the student's grade in the course being added
 	* @return a Promise that resolves to the My course added or an error 
 	*         message explaining why the course couldn't be added
 	*/
-	async addMyCourse(courseCode, grade) {
-		return this.#dataSource.addMyCourse(courseCode, grade);
+	// async addMyCourse(courseCode, grade) {
+	// 	return this.#dataSource.addMyCourse(courseCode, grade);
+	// }
+    async addPerson(firstName, surName, address, socialSecurityNumber, phone) {
+		return this.#dataSource.addPerson(firstName, surName, address, socialSecurityNumber, phone);
 	}
 
 	/**
@@ -67,8 +70,8 @@ export class Atlas {
 	* @return a Promise that resolves to the My course deleted or an error 
 	*         message explaining why the course couldn't be deleted
 	*/
-	async deleteMyCourse(courseCode) {
-		return this.#dataSource.deleteMyCourse(courseCode);
+	async deletePerson(socialSecurityNumber) {
+		return this.#dataSource.deletePerson(socialSecurityNumber);
 	}
 
 	/**

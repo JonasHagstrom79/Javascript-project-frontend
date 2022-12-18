@@ -22,10 +22,6 @@ let courses = []; //TODO:to get rid of referene-error
 /** Limit the number of persons to show on the page. */
 const limit = 100;
 
-/** Compare two course codes (can be used when sorting a list of courses) */
-const courseCodeDescending = (a, b) => a.courseCode > b.courseCode ? 1 : -1;
-
-
 
 /**
  * Handles initialization of the app.
@@ -69,8 +65,9 @@ function createTable() {
 	// coursesToList = coursesToList.sort(courseCodeDescending).slice(0, limit); // limit the number of courses to display
 
     // Keep the original course array intact by assigning the filterad courses to a new array
-    let personsToList = persons//.filter(person => searchFilter(person, searchString));
-	personsToList = personsToList.sort(courseCodeDescending).slice(0, limit); // limit the number of courses to display
+    let personsToList = persons
+    // Sorting the array by surname alpabetically
+	personsToList = personsToList.sort((a, b) => a.surName.localeCompare(b.surName)).slice(0, limit); // limit the number of courses to display
 
 	// Clear any existing data in the table
 	const table = document.getElementById("courses_table");
@@ -82,7 +79,7 @@ function createTable() {
 }
 
 /**
-* Create table rows for all Miun courses in the array.
+* Create table rows for all Miun courses in the array. //TODO:remove method!
 * @param courses an array of Miun courses to create table rows for
 * @param table the table or the table body to add the rows to
 */
@@ -121,8 +118,11 @@ async function createTableForPersons(persons, table) {
 		const tr = document.createElement("tr");
 
 		// Populate the row with the data to display
-		createTd(person.firstName, tr);
-		createTd(person.surName, tr); //TODO:här!!!
+		createTd(person.firstName+" "+ person.surName, tr);
+		//createTd(person.surName, tr); //TODO:här!!!
+        createTd(person.address, tr);
+        //createTd(person.socialSecurityNumber, tr); //TODO: should not be displayed
+        createTd(person.phone, tr);
 			
 		// Create a td to hold the select element for selecting grade
 		const td = document.createElement("td");
@@ -158,8 +158,8 @@ async function createTableForPersons(persons, table) {
 	});
 
 	// Creates gradeoptions for (to be)added course	
-	const select = document.getElementById('newMyCourseSelect');	
-	createGradeOptions(select, grades, grades); 
+	// const select = document.getElementById('newMyCourseSelect');	
+	// createGradeOptions(select, grades, grades); 
 
 	// Click event to submit button in the form
 	if (currentPage.toLocaleLowerCase() == MY_COURSES_PAGE.toLocaleLowerCase()) {
@@ -175,16 +175,26 @@ async function createTableForPersons(persons, table) {
  * Adds a new course to myCourses
  */
 async function addNewMyCourse() {
+	//newPersonSubmit
+	// // Gets the data fron the html-form
+	// const form = document.querySelector('#newMyCourse');
+	// const formBody = new FormData(form);
 	
-	// Gets the data fron the html-form
-	const form = document.querySelector('#newMyCourse');
+	// await atlas.addMyCourse(formBody.get('courseCode'), formBody.get('grade')).then(res => res.json());
+	
+	// // Refreshes the page
+	// location.reload();
+	// form.reset();
+    // Gets the data fron the html-form
+	const form = document.querySelector('#newPerson');
+    console.log(form)
 	const formBody = new FormData(form);
 	
-	await atlas.addMyCourse(formBody.get('courseCode'), formBody.get('grade')).then(res => res.json());
+	await atlas.addPerson(formBody.get('firstName'), formBody.get('surName'),formBody.get('address'),formBody.get('socialSecurityNumber'),formBody.get('phone')).then(res => res.json());
 	
 	// Refreshes the page
 	location.reload();
-	form.reset();	
+	form.reset();		
 }
 
 /**
