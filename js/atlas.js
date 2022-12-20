@@ -18,7 +18,7 @@ export class Atlas {
 
 	/**
 	* Get all Persons from Atlas.
-	* @return a Promise that resolves to an array of courses
+	* @return a Promise that resolves to an array of persons
 	*/
 	async getPersons() { //TODO:Working!
 		return this.#dataSource.getPersons();
@@ -42,47 +42,56 @@ export class Atlas {
 	}
 
 	/**
-	* Get a My course from Atlas with the specified course code.
-	* @param courseCode the course code of the course to get
-	* @return a Promise that resolves to a course object or {} if the course doesn't exist
+	* Get a person from Atlas with the specified social security number.
+	* @param socialSecurityNumber the social security number of the person to get
+	* @return a Promise that resolves to a person object or {} if the person doesn't exist
 	*/
-	async getMyCourse(courseCode) {
-		return this.#dataSource.getMyCourse(courseCode);
+	// async getMyCourse(courseCode) { //TODO:remove!
+	// 	return this.#dataSource.getMyCourse(courseCode); //TODO:remove!
+	// } //TODO:remove!
+	async getPerson(socialSecurityNumber) {
+		return this.#dataSource.getPerson(socialSecurityNumber);
 	}
 
 	/**
 	* Add a person to Atlas.
-	* @param courseCode the course code for the course to be added
-	* @param grade the student's grade in the course being added
-	* @return a Promise that resolves to the My course added or an error 
+	* @param firstName the first name of the person to be added
+	* @param surName the sur name of the person to be added
+	* @param address the address of the person to be added
+	* @param socialSecurityNumber the social security number for the person to be added
+	* @param phone the phone of the person to be added
+	* @return a Promise that resolves to the person added or an error 
 	*         message explaining why the course couldn't be added
 	*/
-	// async addMyCourse(courseCode, grade) {
-	// 	return this.#dataSource.addMyCourse(courseCode, grade);
-	// }
+	// async addMyCourse(courseCode, grade) { //TODO:delete
+	// 	return this.#dataSource.addMyCourse(courseCode, grade); //TODO:delete
+	// } //TODO:delete
     async addPerson(firstName, surName, address, socialSecurityNumber, phone) {
 		return this.#dataSource.addPerson(firstName, surName, address, socialSecurityNumber, phone);
 	}
 
 	/**
-	* Delete a My course in Atlas.
-	* @param courseCode the course code of the course to be deleted
-	* @return a Promise that resolves to the My course deleted or an error 
-	*         message explaining why the course couldn't be deleted
+	* Delete a person in Atlas.
+	* @param socialSecurityNumber the social security number of the person to be deleted
+	* @return a Promise that resolves to the person deleted or an error 
+	*         message explaining why the person couldn't be deleted
 	*/
 	async deletePerson(socialSecurityNumber) {
 		return this.#dataSource.deletePerson(socialSecurityNumber);
 	}
 
 	/**
-	* Update the grade for a My course in Atlas.
-	* @param courseCode the course code of the My course to update the grade for
-	* @param grade the new grade
-	* @return a Promise that resolves to the My course updated or an error 
-	*         message explaining why the course's grade couldn't be updated
+	* Update a person to Atlas.
+	* @param firstName the first name of the person to be updated
+	* @param surName the sur name of the person to be updated
+	* @param address the address of the person to be updated
+	* @param socialSecurityNumber the social security number for the person to be updated
+	* @param phone the phone of the person to be updated
+	* @return a Promise that resolves to the person added or an error 
+	*         message explaining why the course couldn't be added
 	*/
-	updateMyCourse(courseCode, grade) {
-		return this.#dataSource.updateMyCourse(courseCode, grade);
+	updatePerson(firstName, surName, address, socialSecurityNumber, phone) {
+		return this.#dataSource.updatePerson(firstName, surName, address, socialSecurityNumber, phone);
 	}
 
 	/**

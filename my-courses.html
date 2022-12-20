@@ -17,9 +17,9 @@
 
 	<body>
 		<header>
-			<h1 class="center">Mina kurser</h1>
+			<h1 class="center">Personer</h1>
 
-			<p>Detta är mina kurser:</p>
+			<p>Detta är alla personer:</p>
 
 			<nav>
 				<a href="index.html">Alla kurser</a>
@@ -27,7 +27,7 @@
 		</header>
 
 		<main>
-			<div class="search-container">
+			<div class="search-container"> <!--Remove-->
 				<label>Sök kurs: <input type="text" id="search" placeholder="kurskod eller namn...">
 				</label>
 			</div>
@@ -44,7 +44,7 @@
                         
 					</tr>
 				</thead>
-				<tbody id="courses_table">
+				<tbody id="persons_table">
 				</tbody>
 			</table>
 			<br>
@@ -52,11 +52,11 @@
 				<h3>Lägg till person</h3>
 				<!-- <form id="newMyCourse"> -->
                 <form id="newPerson">
-					<label>First name: <input type="text" name="firstName" placeholder="ange förnamn"/></label><br>
-                    <label>Sur name: <input type="text" name="surName" placeholder="ange efternamn"/></label><br>
-                    <label>Address: <input type="text" name="address" placeholder="ange address"/></label><br>
-                    <label>Social security number: <input type="text" name="socialSecurityNumber" placeholder="ange ÅÅMMDDXXXX"/></label><br>
-                    <label>Phone number: <input type="text" name="phone" placeholder="ange telefonnummer"/></label><br>					
+					<label>First name: <input id='first-name-input' type="text" name="firstName" placeholder="ange förnamn"/></label><br>
+                    <label>Sur name: <input id='sur-name-input' type="text" name="surName" placeholder="ange efternamn"/></label><br>
+                    <label>Address: <input id='address-input' type="text" name="address" placeholder="ange address"/></label><br>
+                    <label>Social security number: <input id='social-security-number-input' type="text" name="socialSecurityNumber" placeholder="ange ÅÅMMDDXXXX"/></label><br>
+                    <label>Phone number: <input id='phone-input' type="text" name="phone" placeholder="ange telefonnummer"/></label><br>					
 					<!-- <label>Betyg: <select id="newMyCourseSelect" name="grade"></select></label> -->
 					<!-- <input type="button" id="newMyCourseSubmit" value="Lägg till person"/> -->
                     <input type="button" id="newPersonSubmit" value="Lägg till person"/>

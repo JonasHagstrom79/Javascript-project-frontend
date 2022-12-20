@@ -16,6 +16,16 @@ let currentPage = "index.html";
 
 /** An array of all persons to list on the page. */
 let persons = [];
+let persons2 = []; //TODO:test!!!
+
+/** A person from the json */
+let person = {};
+let getPerson;
+let firstName;
+let surName;
+let socialSecurityNumber;
+let address;
+let phone;
 
 let courses = []; //TODO:to get rid of referene-error
 
@@ -70,7 +80,7 @@ function createTable() {
 	personsToList = personsToList.sort((a, b) => a.surName.localeCompare(b.surName)).slice(0, limit); // limit the number of courses to display
 
 	// Clear any existing data in the table
-	const table = document.getElementById("courses_table");
+	const table = document.getElementById("persons_table");
 	table.innerHTML = null;
 	
 	// Create the table 
@@ -111,7 +121,8 @@ function createTableForMiunCourses(persons, table) {
 async function createTableForPersons(persons, table) {
 	// Get grades from Atlas and then create the table
 	//const grades = await atlas.getGrades().then(grades => grades.json())
-	
+	//addPhoneListeners(); //TODO:remove!
+
 	// For each My course create a table row with course data
 	persons.forEach(person => {
 		// Make a table row
@@ -123,6 +134,21 @@ async function createTableForPersons(persons, table) {
         createTd(person.address, tr);
         //createTd(person.socialSecurityNumber, tr); //TODO: should not be displayed
         createTd(person.phone, tr);
+
+		//Test button
+		// Creates the button
+		const _tdPhone = document.createElement('td');
+		const btnUpdate = document.createElement('button');
+		btnUpdate.innerText = 'Uppdatera';
+		btnUpdate.socialSecurityNumber = person.socialSecurityNumber;
+
+		// Adds listener
+		btnUpdate.addEventListener('click', () => updatePerson(person.socialSecurityNumber)); //TODO:working!
+				
+		_tdPhone.appendChild(btnUpdate);
+		tr.appendChild(_tdPhone);
+
+		// Test button
 			
 		// Create a td to hold the select element for selecting grade
 		const td = document.createElement("td");
@@ -172,9 +198,9 @@ async function createTableForPersons(persons, table) {
 }
 
 /**
- * Adds a new course to myCourses
+ * Adds a new person to persons
  */
-async function addNewMyCourse() {
+async function addNewMyCourse() { //TODO:rename!
 	//newPersonSubmit
 	// // Gets the data fron the html-form
 	// const form = document.querySelector('#newMyCourse');
@@ -187,11 +213,14 @@ async function addNewMyCourse() {
 	// form.reset();
     // Gets the data fron the html-form
 	const form = document.querySelector('#newPerson');
-    console.log(form)
+    console.log(form)//TODO:remove!
 	const formBody = new FormData(form);
 	
 	await atlas.addPerson(formBody.get('firstName'), formBody.get('surName'),formBody.get('address'),formBody.get('socialSecurityNumber'),formBody.get('phone')).then(res => res.json());
 	
+	// Alert for the user
+	alert("Person added!");
+
 	// Refreshes the page
 	location.reload();
 	form.reset();		
@@ -219,17 +248,122 @@ async function updateMyCourse(e) {
 
 }
 
+async function updatePerson(e) {
+
+	alert("Clicked!");
+	const socialSecurityNumber = e;
+	console.log(socialSecurityNumber);
+
+	// Get the person
+	const getPersonPromise = atlas.getPerson(socialSecurityNumber)
+	
+	getPersonPromise
+	.then(async fetchPerson => {
+		
+		getPerson = await fetchPerson.json();
+		console.log("getPerson below") //TODO:remove!
+		console.log(getPerson)//TODO:remove!
+		console.log("getPerson above") //TODO:remove!
+
+	});
+
+	const person = getPerson;
+	console.log("persn below")
+	console.log(person?.surName +" "+ person?.firstName)
+	
+	//const label = document.getElementById('test');
+	//label.textContent = JSON.stringify(person?.firstName);
+
+	const firstNameInput = document.getElementById('first-name-input');
+	const surNameInput = document.getElementById('sur-name-input');
+	const addressInput = document.getElementById('address-input');
+	const socialSecurityNumberInput = document.getElementById('social-security-number-input');
+	const phoneInput = document.getElementById('phone-input');
+
+	firstNameInput.value = person?.firstName;
+	surNameInput.value = person?.surName;
+	addressInput.value = person?.address;
+	socialSecurityNumberInput.value = person?.socialSecurityNumber;
+	phoneInput.value = person?.phone;
+
+	// const form = document.querySelector('#newPerson');
+    
+	// const formBody = new FormData(form);
+	
+	// await atlas.getPerson(formBody.set('firstName', person?.firstName), formBody.set('surName', person?.surName),formBody.set('address', person?.address),formBody.set('socialSecurityNumber', person?.socialSecurityNumber),formBody.set('phone', person?.phone)).then(res => res.json());
+	
+
+
+
+
+	//TODO: getPerson kommer inte in!!
+	// const response = atlas.getPerson(socialSecurityNumber);
+	// console.log("response");
+	// console.log(response);
+	// console.log("response");
+	// //const response = await fetch(`/api/person/${socialSecurityNumber}`);
+	// response
+	// .then(async fetchedPerson => {
+	// 	person = await fetchedPerson.json();
+	// 	console.log(person);
+	// })	
+	
+	
+	//const person = await response.json();
+
+	//console.log(person);
+
+	// var person;
+	// var response;
+	// var data;
+	// var firstName;
+
+	// const personG = await atlas.getPerson(socialSecurityNumber).then(personG = person.json());
+	// const personG = await atlas.getPerson(socialSecurityNumber).then(response => response.json()).then(data => {})
+	// 						//http://127.0.0.1:5501/api/persons/5
+	// fetch('http://localhost:3000/api/persons/5') //http://localhost:3000/api/persons/5
+  	// .then(response => response.json())
+  	// .then(data => {
+    // 	// data är nu en JavaScript-objekt som du kan använda i din frontend-app
+	// 	person.firstName = response.firstName;
+  	// });
+	
+	// console.log(data);
+	// personPromise.then(async fetchedPerson => {
+	// 	person = await fetchedPerson.json();
+	// 	console.log(person);
+	// })
+	//const persons = await atlas.getPersons();
+	//persons = await fetchedPersons.json();
+	//console.log(person);
+	//console.log(persons); "cors"
+
+	// const personPromise = currentPage == MY_COURSES_PAGE ? atlas.getPersons() : atlas.getPersons()//: atlas.getCourses();
+	// console.log("PersonPromise"); //TODO:remove
+    // console.log(personPromise) //TODO:remove
+    // console.log("PersonPromise"); //TODO:remove
+	// personPromise
+	// .then(async fetchedPersons => {
+	// 	persons = await fetchedPersons.json();
+	// 	console.log(persons) //TODO:remove		
+
+}
+
+
 /**
  * Deletes a Person
  */
 async function deletePerson(e) {
 	
-	// Deletes the course from the event e
+	// Deletes the person from the event e
 	const deletedPerson = await atlas.deletePerson(e).then(res => res.json());
 	
-	// Returns the courses
+	// Returns the persons
 	const result = persons.filter(person => person.socialSecurityNumber !== deletedPerson.socialSecurityNumber);
 	
+	// Alert for the user
+	alert("Person deleted!");
+
 	// Refreshes the page
 	location.reload();
 	
@@ -281,6 +415,53 @@ function createTd(text, tr, extra) {
 	}
 
 	tr.appendChild(td);
+}
+
+function addPhoneListeners() { //TODO:remove!
+	// Få tag på tabellen
+	var table = document.getElementById("persons_table");
+
+	// Loopa igenom alla celler i tabellen
+	for (var i = 0; i < table.rows.length; i++) {
+  		for (var j = 0; j < table.rows[i].cells.length; j++) {
+    		// Lägg till en lyssnare på varje cell
+    		table.rows[i].cells[j].addEventListener("click", function() {
+      			// Ta bort alla textrutor som finns i tabellen
+      			removeInputs();
+
+      			// Hämta cellen som klickades på
+      			var cell = this;
+
+      			// Skapa en textruta och lägg till den i cellen
+      			var input = document.createElement("input");
+      			input.type = "text";
+      			input.value = cell.innerHTML;
+      			cell.innerHTML = "";
+      			cell.appendChild(input);
+      			input.focus();
+
+      			// Skapa en knapp och lägg till den i cellen
+      			var button = document.createElement("button");
+      			button.innerHTML = "Spara";
+      			cell.appendChild(button);
+
+      			// Lägg till en lyssnare på knappen
+      			button.addEventListener("click", function() {
+        		// Uppdatera värdet i tabellen med det nya värdet från textrutan
+        		cell.innerHTML = input.value;
+      		});
+    	});
+  	}
+}
+
+// En hjälpfunktion för att ta bort alla textrutor från tabellen
+function removeInputs() {
+  var inputs = document.getElementsByTagName("input");
+  while (inputs.length > 0) {
+    inputs[0].parentNode.innerHTML = inputs[0].value;
+  }
+}
+
 }
 
 /**
