@@ -257,19 +257,27 @@ async function updatePerson(e) {
 	// Get the person
 	const getPersonPromise = atlas.getPerson(socialSecurityNumber)
 	
-	getPersonPromise
-	.then(async fetchPerson => {
+	//let getPerson;
+
+	const person = await getPersonPromise.then(async fetchPerson => {
+		return await fetchPerson.json();
+	  });
+
+	// getPersonPromise
+	// .then(async fetchPerson => {
 		
-		getPerson = await fetchPerson.json();
-		console.log("getPerson below") //TODO:remove!
-		console.log(getPerson)//TODO:remove!
-		console.log("getPerson above") //TODO:remove!
+	// 	getPerson = await fetchPerson.json();
+	// 	console.log("getPerson below") //TODO:remove!
+	// 	console.log(getPerson)//TODO:remove!
+	// 	console.log("getPerson above") //TODO:remove!
 
-	});
+		//TODO:HÄÄÄRRRR!!!!!
 
-	const person = getPerson;
-	console.log("persn below")
-	console.log(person?.surName +" "+ person?.firstName)
+	// });
+
+	// const person = getPerson;
+	// console.log("persn below")
+	// console.log(person?.surName +" "+ person?.firstName)
 	
 	//const label = document.getElementById('test');
 	//label.textContent = JSON.stringify(person?.firstName);
