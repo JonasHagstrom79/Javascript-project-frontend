@@ -118,8 +118,9 @@ async function createTableForPersons(persons, table) {
 		btnUpdate.socialSecurityNumber = person.socialSecurityNumber;
 
 		// Adds listener
-		btnUpdate.addEventListener('click', () => updatePerson(person.socialSecurityNumber)); //TODO:working!
-				
+		//btnUpdate.addEventListener('click', () => updatePerson(person.socialSecurityNumber)); //TODO:working!
+		btnUpdate.addEventListener('click', () => getPersonToUpdate(person.socialSecurityNumber));
+		
 		_tdPhone.appendChild(btnUpdate);
 		tr.appendChild(_tdPhone);
 
@@ -167,7 +168,7 @@ async function createTableForPersons(persons, table) {
 
 		//document.querySelector('#newMyCourseSubmit').addEventListener('click', addNewMyCourse);
         document.querySelector('#newPersonSubmit').addEventListener('click', addNewPerson);
-		
+		document.querySelector('#updatePersonSubmit').addEventListener('click', updatePerson);
 
 	};
 	
@@ -200,23 +201,6 @@ async function addNewPerson() {
 	form.reset();		
 }
 
-function testknapp() { //TODO:remove!!
-	let isUpdate = false;
-
-	const submitButton = document.getElementById('newPersonSubmit');
-
-	submitButton.addEventListener('click', function() {
-		if (isUpdate) {
-		  // If the state is update, call the update function
-		  update();
-		  submitButton.textContent = 'Update';
-		} else {
-		  // If the state is add, call the add function
-		  addNewPerson();
-		  submitButton.textContent = 'Add';
-		}});
-};
-
 /**
  *  Updates a course grade with selected grade
  */
@@ -239,11 +223,24 @@ async function updateMyCourse(e) {
 
 }
 
-async function updatePerson(e) {
-	
+async function ADGSGSGS(ssn) { //TODO:remove!!
+	const response = await fetch(`http://localhost:3000/api/persons/${print}`);
+	const data = await response.json();
+	return data;
+}
+
+//Getperson function first
+async function getPersonToUpdate(e) {
 	// Disables the button for submit a new person
 	disableButtonAddPerson();
+	const print = e
 
+	//const personTest = await atlas.getPerson(print);
+	const personDFDFD = await ADGSGSGS(e); //TODO:remove!!
+
+	console.log("personDF..    :"+personDFDFD.firstName)//TODO:remove!!
+	//console.log("testhämta :" +personTest);
+	console.log("testarprint: " + print) //TODO:remove!!
 	// Enables the button for update a person
 	enableButtonUpdatePerson();
 
@@ -251,14 +248,19 @@ async function updatePerson(e) {
 	// Gets the social security number
 	const socialSecurityNumber = e;
 	console.log(socialSecurityNumber); //TODO:remove!!
+	let fetchPerson; //TODO:remove!!
 
 	// Get the person
 	const getPersonPromise = atlas.getPerson(socialSecurityNumber)	
-	
+	console.log("getPersonPromise :" +getPersonPromise); //TODO:remove!!
 	const person = await getPersonPromise.then(async fetchPerson => {
 		return await fetchPerson.json();
-	});
+	});	
 	
+	console.log("person :" +person); //TODO:remove!!
+	console.log("fetchPerson: " +fetchPerson) //TODO:remove!!
+	//SAmma hit på båda varianterna av ":"+
+	console.log("firstname :"+ person.firstname);
 
 	// Gets the input fields from html for displaying the data
 	const firstNameInput = document.getElementById('first-name-input');
@@ -271,29 +273,80 @@ async function updatePerson(e) {
 	firstNameInput.value = person.firstName;
 	surNameInput.value = person.surName;
 	addressInput.value = person.address;
-	socialSecurityNumberInput.value = "XXXXXXXXXX"//person?.socialSecurityNumber;
+	socialSecurityNumberInput.value = ":"+person.socialSecurityNumber;
 	phoneInput.value = person.phone;
+	console.log("firstname :"+ person.firstname);
 
-	//window.open(`form.html?firstName=${person.firstName}&surName=${person.surName}&address=${person.address}&socialSecurityNumber=${person.socialSecurityNumber}&phone=${person.phone}`, "Form Window", "height=400,width=600");
+}
 
-	// Get the person 
-	const form = document.querySelector('#newPerson');
-    console.log(form)//TODO:remove!
-	const formBody = new FormData(form);
-	//await atlas.updatePerson(formBody.get('firstName'), formBody.get('surName'),formBody.get('address'),formBody.get('socialSecurityNumber'),formBody.get('phone')).then(res => res.json());
-	const response = await atlas.updatePerson(formBody.get('firstName'), formBody.get('surName'),formBody.get('address'),formBody.get('socialSecurityNumber'),formBody.get('phone')).then(res => res.json());
+async function updatePerson(e) {
+	
+	// // Disables the button for submit a new person
+	// disableButtonAddPerson();
+
+	// // Enables the button for update a person
+	// enableButtonUpdatePerson();
+
+	// alert("Clicked!"); //TODO:remove!!
+	// // Gets the social security number
+	// const socialSecurityNumber = e;
+	// console.log(socialSecurityNumber); //TODO:remove!!
+
+	// // Get the person
+	// const getPersonPromise = atlas.getPerson(socialSecurityNumber)	
+	
+	// const person = await getPersonPromise.then(async fetchPerson => {
+	// 	return await fetchPerson.json();
+	// });
+	
+
+	// // Gets the input fields from html for displaying the data
+	// const firstNameInput = document.getElementById('first-name-input');
+	// const surNameInput = document.getElementById('sur-name-input');
+	// const addressInput = document.getElementById('address-input');
+	// const socialSecurityNumberInput = document.getElementById('social-security-number-input');
+	// const phoneInput = document.getElementById('phone-input');
+
+	// // Set the values to the fields 
+	// firstNameInput.value = person.firstName;
+	// surNameInput.value = person.surName;
+	// addressInput.value = person.address;
+	// socialSecurityNumberInput.value = "XXXXXXXXXX"//person?.socialSecurityNumber;
+	// phoneInput.value = person.phone;
+
+	///ABOVE OLD
+	
+	const socialSecurityNumber = e;
+
+	// Get the person data
+	const firstNameInput = document.getElementById('first-name-input');
+	const surNameInput = document.getElementById('sur-name-input');
+	const addressInput = document.getElementById('address-input');
+	const socialSecurityNumberInput = document.getElementById('social-security-number-input');
+	const phoneInput = document.getElementById('phone-input');
+
+	const firstName = firstNameInput.value;
+	const surName = surNameInput.value;
+	const address = addressInput.value;
+	//const socialSecurityNumber = socialSecurityNumberInput.value;
+	const phone = phoneInput.value;
+
+	console.log("firstName       :"+firstName );
+
+	//updatePerson(firstName, surName, address, socialSecurityNumber, phone)
+	const response = await atlas.updatePerson(socialSecurityNumber,firstName, surName, address,  phone).then(res => res.json());
 
 	// Show error to the user
 	if (response.error) {		
 		alert(response.error);
 	} else {
 		alert("Person added!");
-		// Refreshes the page
+	// Refreshes the page
 		location.reload();
 	}	
 
 	// Refreshes the page	
-	form.reset();	
+	//form.reset();	
 		
 		
 

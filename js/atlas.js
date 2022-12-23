@@ -90,7 +90,7 @@ export class Atlas {
 	* @return a Promise that resolves to the person added or an error 
 	*         message explaining why the course couldn't be added
 	*/
-	updatePerson(firstName, surName, address, socialSecurityNumber, phone) {
+	updatePerson(socialSecurityNumber,firstName, surName, address,  phone) {
 		return this.#dataSource.updatePerson(firstName, surName, address, socialSecurityNumber, phone);
 	}
 
