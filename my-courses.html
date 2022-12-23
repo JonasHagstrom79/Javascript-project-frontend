@@ -17,30 +17,23 @@
 
 	<body>
 		<header>
-			<h1 class="center">Personer</h1>
-
-			<p>Detta är alla personer:</p>
+			<h1 class="center">Persons</h1>
+			
+			<!--Remove <p>-->
+			<!-- <p>Detta är alla personer:</p> -->
 
 			<nav>
 				<a href="index.html">Alla kurser</a>
 			</nav>
 		</header>
 
-		<main>
-			<div class="search-container"> <!--Remove-->
-				<label>Sök kurs: <input type="text" id="search" placeholder="kurskod eller namn...">
-				</label>
-			</div>
-
+		<main>			
 			<table>
 				<thead>
-					<tr>
-						<!-- <td>Name</td>
-						<td class="course-name">Address</td>
-						<td class="center">Phone number</td> -->
-                        <td>Namn</td>
+					<tr>						
+                        <td>Name</td>
 						<td class=>Address</td>
-						<td class=>Telefonnummer</td>
+						<td class=>Phone</td>
                         
 					</tr>
 				</thead>
@@ -49,24 +42,24 @@
 			</table>
 			<br>
 			<div>
-				<h3>Lägg till person</h3>
+				<h3>Add person</h3>
 				<!-- <form id="newMyCourse"> -->
                 <form id="newPerson">
-					<label>First name: <input id='first-name-input' type="text" name="firstName" placeholder="ange förnamn"/></label><br>
-                    <label>Sur name: <input id='sur-name-input' type="text" name="surName" placeholder="ange efternamn"/></label><br>
-                    <label>Address: <input id='address-input' type="text" name="address" placeholder="ange address"/></label><br>
-                    <label>Social security number: <input id='social-security-number-input' type="text" name="socialSecurityNumber" placeholder="ange ÅÅMMDDXXXX"/></label><br>
-                    <label>Phone number: <input id='phone-input' type="text" name="phone" placeholder="ange telefonnummer"/></label><br>					
+					<label>First name: <input id='first-name-input' type="text" name="firstName" placeholder="insert first name"/></label><br>
+                    <label>Sur name: <input id='sur-name-input' type="text" name="surName" placeholder="insert sur name"/></label><br>
+                    <label>Address: <input id='address-input' type="text" name="address" placeholder="insert address"/></label><br>
+                    <label>Social security number: <input id='social-security-number-input' type="text" name="socialSecurityNumber" placeholder="insert ÅÅMMDDXXXX"/></label><br>
+                    <label>Phone number: <input id='phone-input' type="text" name="phone" placeholder="insert phone number"/></label><br>					
 					<!-- <label>Betyg: <select id="newMyCourseSelect" name="grade"></select></label> -->
 					<!-- <input type="button" id="newMyCourseSubmit" value="Lägg till person"/> -->
-                    <input type="button" id="newPersonSubmit" value="Lägg till person"/>
+                    <input type="button" id="newPersonSubmit" value="Add person"/>
 				</form>
 			</div>	
 		</main>
 		<footer>
-			<p class="center">
-				Denna sida läser data från filen
-				<a href="http://localhost:3000/api/courses" target="_blank">miun-db.json</a>.
+			<p class="center"> <!--Remove? social sec number visible-->
+				This site reads data from 
+				<a href="http://localhost:3000/api/persons" target="blank">person-db.json</a>.
 			</p>
 		</footer>
 	</body>

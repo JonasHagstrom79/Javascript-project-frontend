@@ -68,7 +68,7 @@ function createTable() {
 	const tableCreator = currentPage == MY_COURSES_PAGE ? createTableForPersons : createTableForPersons//TODO: to get it right//createTableForMiunCourses;
 
 	// Regardles the type of table to create, sort and filter the courses
-	const searchString = document.getElementById("search").value.toLowerCase();
+	//const searchString = document.getElementById("search").value.toLowerCase();
 
 	// Keep the original course array intact by assigning the filterad courses to a new array
 	// let coursesToList = courses.filter(course => searchFilter(course, searchString));
@@ -88,42 +88,18 @@ function createTable() {
 	tableCreator(personsToList, table);
 }
 
-/**
-* Create table rows for all Miun courses in the array. //TODO:remove method!
-* @param courses an array of Miun courses to create table rows for
-* @param table the table or the table body to add the rows to
-*/
-function createTableForMiunCourses(persons, table) {
-	// For each course create a table row with course data
-	persons.forEach(person => {
-		// Make a table row
-		const tr = document.createElement("tr");
-
-		// Populate the row with the data to display
-		createTd(course.courseCode, tr); //TODO: ad person. here?
-		createTd(course.name, tr);		
-		createTd(course.subjectCode, tr)
-		createTd(course.progression, tr);
-		createTd(course.points, tr);
-		createTd(course.institutionCode, tr,
-			element => element.classList.add("center"));
-
-		// Add the row to the table
-		table.appendChild(tr);
-	});
-}
 
 /**
-* Create table rows for all My courses in the array.
+* Create table rows for all persons in the array.
 * @param persons an array of persons to create table rows for
 * @param table the table or the table body to add the rows to
 */
 async function createTableForPersons(persons, table) {
-	// Get grades from Atlas and then create the table
-	//const grades = await atlas.getGrades().then(grades => grades.json())
+	// Get grades from Atlas and then create the table //TODO:remove!
+	//const grades = await atlas.getGrades().then(grades => grades.json()) //TODO:remove!
 	//addPhoneListeners(); //TODO:remove!
 
-	// For each My course create a table row with course data
+	// For each person create a table row with data
 	persons.forEach(person => {
 		// Make a table row
 		const tr = document.createElement("tr");
@@ -134,12 +110,11 @@ async function createTableForPersons(persons, table) {
         createTd(person.address, tr);
         //createTd(person.socialSecurityNumber, tr); //TODO: should not be displayed
         createTd(person.phone, tr);
-
-		//Test button
-		// Creates the button
+		
+		// Creates the button for update a person
 		const _tdPhone = document.createElement('td');
 		const btnUpdate = document.createElement('button');
-		btnUpdate.innerText = 'Uppdatera';
+		btnUpdate.innerText = 'Update';
 		btnUpdate.socialSecurityNumber = person.socialSecurityNumber;
 
 		// Adds listener
@@ -171,7 +146,7 @@ async function createTableForPersons(persons, table) {
 		// Add delete-button to the row
 		const _td = document.createElement('td');
 		const btnDelete = document.createElement('button');
-		btnDelete.innerText = 'Radera';
+		btnDelete.innerText = 'Delete';
 		btnDelete.socialSecurityNumber = person.socialSecurityNumber;
 		// Add listener to the button
 		btnDelete.addEventListener('click', _event => deletePerson(person.socialSecurityNumber));
@@ -191,7 +166,7 @@ async function createTableForPersons(persons, table) {
 	if (currentPage.toLocaleLowerCase() == MY_COURSES_PAGE.toLocaleLowerCase()) {
 
 		//document.querySelector('#newMyCourseSubmit').addEventListener('click', addNewMyCourse);
-        document.querySelector('#newPersonSubmit').addEventListener('click', addNewMyCourse);
+        document.querySelector('#newPersonSubmit').addEventListener('click', addNewPerson);
 
 	};
 	
@@ -200,29 +175,27 @@ async function createTableForPersons(persons, table) {
 /**
  * Adds a new person to persons
  */
-async function addNewMyCourse() { //TODO:rename!
-	//newPersonSubmit
-	// // Gets the data fron the html-form
-	// const form = document.querySelector('#newMyCourse');
-	// const formBody = new FormData(form);
+async function addNewPerson() { 
 	
-	// await atlas.addMyCourse(formBody.get('courseCode'), formBody.get('grade')).then(res => res.json());
-	
-	// // Refreshes the page
-	// location.reload();
-	// form.reset();
     // Gets the data fron the html-form
 	const form = document.querySelector('#newPerson');
     console.log(form)//TODO:remove!
 	const formBody = new FormData(form);
 	
-	await atlas.addPerson(formBody.get('firstName'), formBody.get('surName'),formBody.get('address'),formBody.get('socialSecurityNumber'),formBody.get('phone')).then(res => res.json());
-	
-	// Alert for the user
-	alert("Person added!");
+	// Adds the person to db
+	//await atlas.addPerson(formBody.get('firstName'), formBody.get('surName'),formBody.get('address'),formBody.get('socialSecurityNumber'),formBody.get('phone')).then(res => res.json());
+	const response = await atlas.addPerson(formBody.get('firstName'), formBody.get('surName'),formBody.get('address'),formBody.get('socialSecurityNumber'),formBody.get('phone')).then(res => res.json());
 
-	// Refreshes the page
-	location.reload();
+	// Show error to the user
+	if (response.error) {		
+		alert(response.error);
+	} else {
+		alert("Person added!");
+		// Refreshes the page
+		location.reload();
+	}	
+
+	// Refreshes the page	
 	form.reset();		
 }
 
@@ -255,45 +228,32 @@ async function updatePerson(e) {
 	console.log(socialSecurityNumber);
 
 	// Get the person
-	const getPersonPromise = atlas.getPerson(socialSecurityNumber)
+	const getPersonPromise = atlas.getPerson(socialSecurityNumber)	
 	
-	//let getPerson;
-
 	const person = await getPersonPromise.then(async fetchPerson => {
 		return await fetchPerson.json();
-	  });
-
-	// getPersonPromise
-	// .then(async fetchPerson => {
-		
-	// 	getPerson = await fetchPerson.json();
-	// 	console.log("getPerson below") //TODO:remove!
-	// 	console.log(getPerson)//TODO:remove!
-	// 	console.log("getPerson above") //TODO:remove!
-
-		//TODO:HÄÄÄRRRR!!!!!
-
-	// });
-
-	// const person = getPerson;
-	// console.log("persn below")
-	// console.log(person?.surName +" "+ person?.firstName)
+	});
 	
-	//const label = document.getElementById('test');
-	//label.textContent = JSON.stringify(person?.firstName);
 
+	// Gets the inputs from html
 	const firstNameInput = document.getElementById('first-name-input');
 	const surNameInput = document.getElementById('sur-name-input');
 	const addressInput = document.getElementById('address-input');
 	const socialSecurityNumberInput = document.getElementById('social-security-number-input');
 	const phoneInput = document.getElementById('phone-input');
 
+	// Set the values to the fields 
 	firstNameInput.value = person?.firstName;
 	surNameInput.value = person?.surName;
 	addressInput.value = person?.address;
 	socialSecurityNumberInput.value = person?.socialSecurityNumber;
 	phoneInput.value = person?.phone;
 
+	// Get the person 
+	const form = document.querySelector('#newPerson');
+    console.log(form)//TODO:remove!
+	const formBody = new FormData(form);
+	await atlas.updatePerson(formBody.get('firstName'), formBody.get('surName'),formBody.get('address'),formBody.get('socialSecurityNumber'),formBody.get('phone')).then(res => res.json());
 	// const form = document.querySelector('#newPerson');
     
 	// const formBody = new FormData(form);
