@@ -57,12 +57,9 @@ function starterFunction() {
 }
 
 /**
-* Creates the HTML table displaying the courses (either Miun courses or My courses).
+* Creates the HTML table displaying the persons
 */
-function createTable() {
-	// The type of course (a Miun course or a My course) to be listed in the table depends
-	// on the name of the current location (name of the page). The structure of the table 
-	// displaying course data also depends upon this.
+function createTable() {	
 
 	// Descide the function to be used when creaing the HTML tabel
 	const tableCreator = currentPage == MY_COURSES_PAGE ? createTableForPersons : createTableForPersons//TODO: to get it right//createTableForMiunCourses;
@@ -98,6 +95,9 @@ async function createTableForPersons(persons, table) {
 	// Get grades from Atlas and then create the table //TODO:remove!
 	//const grades = await atlas.getGrades().then(grades => grades.json()) //TODO:remove!
 	//addPhoneListeners(); //TODO:remove!
+
+	// Disables the Update person button upon start
+	disableButtonUpdatePerson();
 
 	// For each person create a table row with data
 	persons.forEach(person => {
@@ -167,6 +167,7 @@ async function createTableForPersons(persons, table) {
 
 		//document.querySelector('#newMyCourseSubmit').addEventListener('click', addNewMyCourse);
         document.querySelector('#newPersonSubmit').addEventListener('click', addNewPerson);
+		
 
 	};
 	
@@ -176,7 +177,7 @@ async function createTableForPersons(persons, table) {
  * Adds a new person to persons
  */
 async function addNewPerson() { 
-	
+		
     // Gets the data fron the html-form
 	const form = document.querySelector('#newPerson');
     console.log(form)//TODO:remove!
@@ -198,6 +199,23 @@ async function addNewPerson() {
 	// Refreshes the page	
 	form.reset();		
 }
+
+function testknapp() { //TODO:remove!!
+	let isUpdate = false;
+
+	const submitButton = document.getElementById('newPersonSubmit');
+
+	submitButton.addEventListener('click', function() {
+		if (isUpdate) {
+		  // If the state is update, call the update function
+		  update();
+		  submitButton.textContent = 'Update';
+		} else {
+		  // If the state is add, call the add function
+		  addNewPerson();
+		  submitButton.textContent = 'Add';
+		}});
+};
 
 /**
  *  Updates a course grade with selected grade
@@ -222,10 +240,17 @@ async function updateMyCourse(e) {
 }
 
 async function updatePerson(e) {
+	
+	// Disables the button for submit a new person
+	disableButtonAddPerson();
 
-	alert("Clicked!");
+	// Enables the button for update a person
+	enableButtonUpdatePerson();
+
+	alert("Clicked!"); //TODO:remove!!
+	// Gets the social security number
 	const socialSecurityNumber = e;
-	console.log(socialSecurityNumber);
+	console.log(socialSecurityNumber); //TODO:remove!!
 
 	// Get the person
 	const getPersonPromise = atlas.getPerson(socialSecurityNumber)	
@@ -235,7 +260,7 @@ async function updatePerson(e) {
 	});
 	
 
-	// Gets the inputs from html
+	// Gets the input fields from html for displaying the data
 	const firstNameInput = document.getElementById('first-name-input');
 	const surNameInput = document.getElementById('sur-name-input');
 	const addressInput = document.getElementById('address-input');
@@ -243,80 +268,76 @@ async function updatePerson(e) {
 	const phoneInput = document.getElementById('phone-input');
 
 	// Set the values to the fields 
-	firstNameInput.value = person?.firstName;
-	surNameInput.value = person?.surName;
-	addressInput.value = person?.address;
-	socialSecurityNumberInput.value = person?.socialSecurityNumber;
-	phoneInput.value = person?.phone;
+	firstNameInput.value = person.firstName;
+	surNameInput.value = person.surName;
+	addressInput.value = person.address;
+	socialSecurityNumberInput.value = "XXXXXXXXXX"//person?.socialSecurityNumber;
+	phoneInput.value = person.phone;
+
+	//window.open(`form.html?firstName=${person.firstName}&surName=${person.surName}&address=${person.address}&socialSecurityNumber=${person.socialSecurityNumber}&phone=${person.phone}`, "Form Window", "height=400,width=600");
 
 	// Get the person 
 	const form = document.querySelector('#newPerson');
     console.log(form)//TODO:remove!
 	const formBody = new FormData(form);
-	await atlas.updatePerson(formBody.get('firstName'), formBody.get('surName'),formBody.get('address'),formBody.get('socialSecurityNumber'),formBody.get('phone')).then(res => res.json());
-	// const form = document.querySelector('#newPerson');
-    
-	// const formBody = new FormData(form);
-	
-	// await atlas.getPerson(formBody.set('firstName', person?.firstName), formBody.set('surName', person?.surName),formBody.set('address', person?.address),formBody.set('socialSecurityNumber', person?.socialSecurityNumber),formBody.set('phone', person?.phone)).then(res => res.json());
-	
+	//await atlas.updatePerson(formBody.get('firstName'), formBody.get('surName'),formBody.get('address'),formBody.get('socialSecurityNumber'),formBody.get('phone')).then(res => res.json());
+	const response = await atlas.updatePerson(formBody.get('firstName'), formBody.get('surName'),formBody.get('address'),formBody.get('socialSecurityNumber'),formBody.get('phone')).then(res => res.json());
 
+	// Show error to the user
+	if (response.error) {		
+		alert(response.error);
+	} else {
+		alert("Person added!");
+		// Refreshes the page
+		location.reload();
+	}	
 
-
-
-	//TODO: getPerson kommer inte in!!
-	// const response = atlas.getPerson(socialSecurityNumber);
-	// console.log("response");
-	// console.log(response);
-	// console.log("response");
-	// //const response = await fetch(`/api/person/${socialSecurityNumber}`);
-	// response
-	// .then(async fetchedPerson => {
-	// 	person = await fetchedPerson.json();
-	// 	console.log(person);
-	// })	
-	
-	
-	//const person = await response.json();
-
-	//console.log(person);
-
-	// var person;
-	// var response;
-	// var data;
-	// var firstName;
-
-	// const personG = await atlas.getPerson(socialSecurityNumber).then(personG = person.json());
-	// const personG = await atlas.getPerson(socialSecurityNumber).then(response => response.json()).then(data => {})
-	// 						//http://127.0.0.1:5501/api/persons/5
-	// fetch('http://localhost:3000/api/persons/5') //http://localhost:3000/api/persons/5
-  	// .then(response => response.json())
-  	// .then(data => {
-    // 	// data är nu en JavaScript-objekt som du kan använda i din frontend-app
-	// 	person.firstName = response.firstName;
-  	// });
-	
-	// console.log(data);
-	// personPromise.then(async fetchedPerson => {
-	// 	person = await fetchedPerson.json();
-	// 	console.log(person);
-	// })
-	//const persons = await atlas.getPersons();
-	//persons = await fetchedPersons.json();
-	//console.log(person);
-	//console.log(persons); "cors"
-
-	// const personPromise = currentPage == MY_COURSES_PAGE ? atlas.getPersons() : atlas.getPersons()//: atlas.getCourses();
-	// console.log("PersonPromise"); //TODO:remove
-    // console.log(personPromise) //TODO:remove
-    // console.log("PersonPromise"); //TODO:remove
-	// personPromise
-	// .then(async fetchedPersons => {
-	// 	persons = await fetchedPersons.json();
-	// 	console.log(persons) //TODO:remove		
+	// Refreshes the page	
+	form.reset();	
+		
+		
 
 }
 
+/**
+ * Disables the button Update person
+ */
+function disableButtonUpdatePerson() {
+
+	const updatePersonButton = document.getElementById('updatePersonSubmit');
+	updatePersonButton.disabled = true;
+
+};
+
+/**
+ * Enables the button Update person
+ */
+function enableButtonUpdatePerson() {
+
+	const updatePersonButton = document.getElementById('updatePersonSubmit');
+	updatePersonButton.disabled = false;
+
+};
+
+/**
+ * Disables the button Add person
+ */
+function disableButtonAddPerson() {
+
+	const addButton = document.getElementById('newPersonSubmit');
+	addButton.disabled = true;
+
+}
+
+/**
+ * Enables the button Add person
+ */
+function enableButtonAddPerson() {
+
+	const addButton = document.getElementById('newPersonSubmit');
+	addButton.disabled = false;
+
+}
 
 /**
  * Deletes a Person
@@ -336,7 +357,7 @@ async function deletePerson(e) {
 	location.reload();
 	
 	return result;	
-}
+};
 
 /**
 * Create option elements for the specified select element.
