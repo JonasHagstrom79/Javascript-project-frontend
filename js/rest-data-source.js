@@ -105,10 +105,10 @@ export class RESTDataSource extends DataSource {
 	* @return a Promise that resolves to the My course updated or an error 
 	*         message explaining why the course's grade couldn't be updated
 	*/
-	updatePerson(socialSecurityNumber, phone) { //updateMyCourse
+	updatePerson(socialSecurityNumber, firstName, surName, address, phone) { //updateMyCourse
 		
 		return this.getData('/api/persons/' +socialSecurityNumber, 'PUT',
-		{'socialSecurityNumber': socialSecurityNumber, 'phone': phone});
+		{'firstName': firstName, 'surName':surName, 'address':address, 'socialSecurityNumber':socialSecurityNumber, 'phone':phone});
 
 	}
 

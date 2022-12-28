@@ -20,7 +20,7 @@ export class Atlas {
 	* Get all Persons from Atlas.
 	* @return a Promise that resolves to an array of persons
 	*/
-	async getPersons() { //TODO:Working!
+	async getPersons() { //TODO:Working!		
 		return this.#dataSource.getPersons();
 	}
 
@@ -90,8 +90,12 @@ export class Atlas {
 	* @return a Promise that resolves to the person added or an error 
 	*         message explaining why the course couldn't be added
 	*/
-	updatePerson(socialSecurityNumber,firstName, surName, address,  phone) {
-		return this.#dataSource.updatePerson(firstName, surName, address, socialSecurityNumber, phone);
+	// updatePerson(socialSecurityNumber,firstName, surName, address,  phone) {
+	// 	return this.#dataSource.updatePerson(firstName, surName, address, socialSecurityNumber, phone);
+	// }
+
+	updatePerson(socialSecurityNumber, firstName, surName, address, phone) {
+		return this.#dataSource.updatePerson(socialSecurityNumber, firstName, surName, address, phone);
 	}
 
 	/**

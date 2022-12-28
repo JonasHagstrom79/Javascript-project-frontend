@@ -20,6 +20,7 @@ let persons2 = []; //TODO:test!!!
 
 /** A person from the json */
 let person = {};
+let personXXX;
 let getPerson;
 let firstName;
 let surName;
@@ -223,41 +224,35 @@ async function updateMyCourse(e) {
 
 }
 
-async function ADGSGSGS(ssn) { //TODO:remove!!
-	const response = await fetch(`http://localhost:3000/api/persons/${print}`);
-	const data = await response.json();
-	return data;
-}
-
 //Getperson function first
 async function getPersonToUpdate(e) {
 	// Disables the button for submit a new person
 	disableButtonAddPerson();
 	const print = e
 
-	//const personTest = await atlas.getPerson(print);
-	const personDFDFD = await ADGSGSGS(e); //TODO:remove!!
-
-	console.log("personDF..    :"+personDFDFD.firstName)//TODO:remove!!
-	//console.log("testhämta :" +personTest);
-	console.log("testarprint: " + print) //TODO:remove!!
+	console.log(print);
+	
 	// Enables the button for update a person
 	enableButtonUpdatePerson();
 
 	alert("Clicked!"); //TODO:remove!!
 	// Gets the social security number
 	const socialSecurityNumber = e;
-	console.log(socialSecurityNumber); //TODO:remove!!
-	let fetchPerson; //TODO:remove!!
+	console.log(socialSecurityNumber); //TODO:remove!! //9
+	let fetchPerson; //TODO:remove!!	
 
 	// Get the person
 	const getPersonPromise = atlas.getPerson(socialSecurityNumber)	
 	console.log("getPersonPromise :" +getPersonPromise); //TODO:remove!!
+	console.dir({"tses: " :getPersonPromise.firstName})
 	const person = await getPersonPromise.then(async fetchPerson => {
 		return await fetchPerson.json();
-	});	
+	}).catch(error => 
+		console.log(error));
 	
-	console.log("person :" +person); //TODO:remove!!
+	
+	
+	console.dir({"firstname " :person.firstName, "lastname " :person.surName, "social sec num ":person.socialSecurityNumber}); //TODO:remove!!
 	console.log("fetchPerson: " +fetchPerson) //TODO:remove!!
 	//SAmma hit på båda varianterna av ":"+
 	console.log("firstname :"+ person.firstname);
@@ -273,10 +268,15 @@ async function getPersonToUpdate(e) {
 	firstNameInput.value = person.firstName;
 	surNameInput.value = person.surName;
 	addressInput.value = person.address;
-	socialSecurityNumberInput.value = ":"+person.socialSecurityNumber;
+	socialSecurityNumberInput.value = person.socialSecurityNumber;//":"+person.socialSecurityNumber;
 	phoneInput.value = person.phone;
 	console.log("firstname :"+ person.firstname);
-
+	console.dir({"firstname " :person.firstName, "lastname " :person.surName, "social sec num ":person.socialSecurityNumber}); //TODO:remove!!
+	
+	// Enables the button for update a person
+	enableButtonUpdatePerson();
+	
+	return person //TODO:return necceserry?
 }
 
 async function updatePerson(e) {
@@ -316,7 +316,9 @@ async function updatePerson(e) {
 
 	///ABOVE OLD
 	
-	const socialSecurityNumber = e;
+	const socialSecurityNumber = e; //TODO:neccecerry?
+	// Prevents the default form submission behavior
+	e.preventDefault();
 
 	// Get the person data
 	const firstNameInput = document.getElementById('first-name-input');
@@ -329,12 +331,17 @@ async function updatePerson(e) {
 	const surName = surNameInput.value;
 	const address = addressInput.value;
 	//const socialSecurityNumber = socialSecurityNumberInput.value;
+	e = socialSecurityNumberInput.value;
 	const phone = phoneInput.value;
 
-	console.log("firstName       :"+firstName );
+	console.log("firstName  :"+firstName ); //TODO: remove all console.log!
+	console.log("lasttName  :"+surName );
+	console.log("address  :"+address );
+	console.log("socialsecNum  :"+e );
+	console.log("phone  :"+phone );
 
 	//updatePerson(firstName, surName, address, socialSecurityNumber, phone)
-	const response = await atlas.updatePerson(socialSecurityNumber,firstName, surName, address,  phone).then(res => res.json());
+	const response = await atlas.updatePerson(e,firstName, surName, address,  phone).then(res => res.json());
 
 	// Show error to the user
 	if (response.error) {		
@@ -346,8 +353,9 @@ async function updatePerson(e) {
 	}	
 
 	// Refreshes the page	
-	//form.reset();	
-		
+	//form.reset();
+
+	disableButtonUpdatePerson();	
 		
 
 }
