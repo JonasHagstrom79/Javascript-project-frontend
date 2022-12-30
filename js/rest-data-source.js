@@ -22,16 +22,16 @@ export class RESTDataSource extends DataSource {
 	 * @param body default an empty body {}
 	 * @return a Promise that resolves to the value of the given endpoint
 	 */
-	 async getData(endpoint = '', method = 'GET', body = {}) {
+	async getData(endpoint = '', method = 'GET', body = {}) {
 		return super.getData(endpoint, method, body);
 		
 	}
 
     /**
 	* Get all persons from the REST API.
-	* @return a Promise that resolves to an array of courses
+	* @return a Promise that resolves to an array of persons
 	*/
-	async getPersons() { //getCourses
+	async getPersons() { 
 
 		return this.getData('/api/persons');
 
@@ -40,68 +40,49 @@ export class RESTDataSource extends DataSource {
 	/**
 	* Get the person with specific social security number from the REST API.
 	* @param socialSecurityNumber the course code of the course to get
-	* @return a Promise that resolves to a course object or {} if the course doesn't exist
+	* @return a Promise that resolves to a person object or {} if the person doesn't exist
 	*/
-	async getPerson(socialSecurityNumber) { //getCourse		
-		//console.log("From getPerson() in rest-data-source")
-		//console.log(socialSecurityNumber)
-		//console.log(this.getData('/api/persons/:' + socialSecurityNumber))
+	async getPerson(socialSecurityNumber) { 	
+		
 		return this.getData('/api/persons/:' + socialSecurityNumber);
-		//return this.getData('/api/persons/:5');
-
-	}
-
-	/**
-	* Get all My courses from the REST API.
-	* @return a Promise that resolves to an array of My courses (a Miun course with grade included)
-	*/
-	async getMyCourses() { //TODO:remove?
-		
-		return this.getData('/api/courses/my');
 		
 	}
 
 	/**
-	* Get the My course with the specified course code from the REST API.
-	* @param courseCode the course code of the course to get
-	* @return a Promise that resolves to a My course object or {} if the course doesn't exist
+	* Add a person to the REST API.
+	* @param firstName the first name for the person to be added
+	* @param surName the sur name for the person to be added
+	* @param address the address of the person to be added
+	* @param socialSecurityNumber the social security number for the person to be added
+	* @param phone the phone number for the person to be added
+	* @return a Promise that resolves to a person object of the person added or an error 
+	*         message explaining why the person couldn't be added
 	*/
-	async getMyCourse(courseCode) { //TODO:remove?	 
-
-		return this.getData('/api/courses/my/:'+courseCode);
+	async addPerson(firstName, surName, address, socialSecurityNumber, phone) { 
 		
-	}
-
-	/**
-	* Add a My course with a grade to the REST API.
-	* @param courseCode the course code for the course to be added
-	* @param grade the student's grade in the course being added
-	* @return a Promise that resolves to a My course object of the course added or an error 
-	*         message explaining why the course couldn't be added
-	*/
-	async addPerson(firstName, surName, address, socialSecurityNumber, phone) { //addCourse
-		
-		return this.getData('/api/persons', 'POST', 
-		//{'courseCode': courseCode, 'grade': grade});
+		return this.getData('/api/persons', 'POST',		
         {'firstName': firstName, 'surName':surName, 'address':address, 'socialSecurityNumber':socialSecurityNumber, 'phone':phone});
 	}	
 
 	/**
 	* Delete a person from the REST API.
-	* @param socialSecurityNumber the course code for the course to be deleted
+	* @param socialSecurityNumber the social security number for the person to be deleted
 	* @return a Promise that resolves to the My course deleted or an error 
 	*         message explaining why the course couldn't be deleted
 	*/
-	async deletePerson(socialSecurityNumber) { //deleteMyCourse
+	async deletePerson(socialSecurityNumber) { 
 		
 		return this.getData('/api/persons/' + socialSecurityNumber, 'DELETE');
 		
 	}
 
 	/**
-	* Update the grade for a My course in the REST API.
-	* @param  socialSecurityNumber the id for the person to update the phone for
-	* @param phone the new phone number
+	* Updates the persons information.
+	* @param socialSecurityNumber the social security number for the person to be updated
+	* @param phone the phone number fot the person to be updated
+	* @param firstName the first name fpr the person to be updated
+	* @param surName the last name for the person to be updated
+	* @param address the address for the person to be updated
 	* @return a Promise that resolves to the My course updated or an error 
 	*         message explaining why the course's grade couldn't be updated
 	*/
@@ -111,14 +92,5 @@ export class RESTDataSource extends DataSource {
 		{'firstName': firstName, 'surName':surName, 'address':address, 'socialSecurityNumber':socialSecurityNumber, 'phone':phone});
 
 	}
-
-	/**
-	* Get all grades in the grade scale from the REST API.
-	* @return a Promise that resolves to an array of grades
-	*/
-	async getGrades() { //TODO:remove?
-		
-		return this.getData('/api/grades');
-
-	}
+	
 }

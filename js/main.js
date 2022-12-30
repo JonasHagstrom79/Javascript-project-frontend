@@ -8,7 +8,7 @@ const dataSource = new RESTDataSource("http://localhost:3000");
 /** The Atlas instance */
 const atlas = new Atlas(dataSource);
 
-/** The name of the page displaying the list of My courses */
+/** The name of the page displaying the list of Persons */
 const MY_COURSES_PAGE = "my-courses.html";
 
 /** The name of the page curretly beeing displayed */
@@ -16,17 +16,6 @@ let currentPage = "index.html";
 
 /** An array of all persons to list on the page. */
 let persons = [];
-let persons2 = []; //TODO:test!!!
-
-/** A person from the json */
-let person = {};
-let personXXX;
-let getPerson;
-let firstName;
-let surName;
-let socialSecurityNumber;
-let address;
-let phone;
 
 let courses = []; //TODO:to get rid of referene-error
 
@@ -43,15 +32,12 @@ function starterFunction() {
 
 	
 	
-	// Get the list of courses from Atlas
-	const personPromise = currentPage == MY_COURSES_PAGE ? atlas.getPersons() : atlas.getPersons()//: atlas.getCourses();
-	console.log("PersonPromise"); //TODO:remove
-    console.log(personPromise) //TODO:remove
-    console.log("PersonPromise"); //TODO:remove
+	// Get the list of persons from Atlas
+	const personPromise = currentPage == MY_COURSES_PAGE ? atlas.getPersons() : atlas.getPersons()	
 	personPromise
 	.then(async fetchedPersons => {
 		persons = await fetchedPersons.json();
-		console.log(persons) //TODO:remove		
+				
 		createTable(); // create the table with the fetched courses
 	})
 	.catch(error => console.error(`An error occurd when getting persons from Atlas: ${error}`));
@@ -64,16 +50,10 @@ function createTable() {
 
 	// Descide the function to be used when creaing the HTML tabel
 	const tableCreator = currentPage == MY_COURSES_PAGE ? createTableForPersons : createTableForPersons//TODO: to get it right//createTableForMiunCourses;
-
-	// Regardles the type of table to create, sort and filter the courses
-	//const searchString = document.getElementById("search").value.toLowerCase();
-
-	// Keep the original course array intact by assigning the filterad courses to a new array
-	// let coursesToList = courses.filter(course => searchFilter(course, searchString));
-	// coursesToList = coursesToList.sort(courseCodeDescending).slice(0, limit); // limit the number of courses to display
-
+	
     // Keep the original course array intact by assigning the filterad courses to a new array
     let personsToList = persons
+
     // Sorting the array by surname alpabetically
 	personsToList = personsToList.sort((a, b) => a.surName.localeCompare(b.surName)).slice(0, limit); // limit the number of courses to display
 
@@ -81,8 +61,7 @@ function createTable() {
 	const table = document.getElementById("persons_table");
 	table.innerHTML = null;
 	
-	// Create the table 
-	// (a call to createTableForMyCourses(courses, table) or createTableForMiunCourses(courses, table))
+	// Create the table 	
 	tableCreator(personsToList, table);
 }
 
@@ -92,10 +71,7 @@ function createTable() {
 * @param persons an array of persons to create table rows for
 * @param table the table or the table body to add the rows to
 */
-async function createTableForPersons(persons, table) {
-	// Get grades from Atlas and then create the table //TODO:remove!
-	//const grades = await atlas.getGrades().then(grades => grades.json()) //TODO:remove!
-	//addPhoneListeners(); //TODO:remove!
+async function createTableForPersons(persons, table) {	
 
 	// Disables the Update person button upon start
 	disableButtonUpdatePerson();
@@ -106,10 +82,8 @@ async function createTableForPersons(persons, table) {
 		const tr = document.createElement("tr");
 
 		// Populate the row with the data to display
-		createTd(person.firstName+" "+ person.surName, tr);
-		//createTd(person.surName, tr); //TODO:här!!!
-        createTd(person.address, tr);
-        //createTd(person.socialSecurityNumber, tr); //TODO: should not be displayed
+		createTd(person.firstName+" "+ person.surName, tr);		
+        createTd(person.address, tr);        
         createTd(person.phone, tr);
 		
 		// Creates the button for update a person
@@ -118,31 +92,14 @@ async function createTableForPersons(persons, table) {
 		btnUpdate.innerText = 'Update';
 		btnUpdate.socialSecurityNumber = person.socialSecurityNumber;
 
-		// Adds listener
-		//btnUpdate.addEventListener('click', () => updatePerson(person.socialSecurityNumber)); //TODO:working!
-		btnUpdate.addEventListener('click', () => getPersonToUpdate(person.socialSecurityNumber));
-		
+		// Adds listener		
+		btnUpdate.addEventListener('click', () => getPersonToUpdate(person.socialSecurityNumber));		
 		_tdPhone.appendChild(btnUpdate);
 		tr.appendChild(_tdPhone);
-
-		// Test button
-			
-		// Create a td to hold the select element for selecting grade
+					
+		// Create a td
 		const td = document.createElement("td");
-		td.classList.add("center");
-
-		// Create a select element for the grades that can be selected
-		// const selectElement = document.createElement("select");
-		// selectElement.id = "select_" + course.courseCode;
-			
-		// Add each grade as an option in the select element and set
-		// the course grade as the selected grade in the list
-		// createGradeOptions(selectElement, grades, course.grade);
-		
-		// Eventlistenser to select option //TODO: Here for change phone-number!!
-		//selectElement.addEventListener('change', _event => updateMyCourse(course.courseCode));
-
-		//td.appendChild(selectElement);
+		td.classList.add("center");		
 		tr.appendChild(td);
 
 		// Add delete-button to the row
@@ -159,15 +116,11 @@ async function createTableForPersons(persons, table) {
 		table.appendChild(tr);		
 		
 	});
+	
 
-	// Creates gradeoptions for (to be)added course	
-	// const select = document.getElementById('newMyCourseSelect');	
-	// createGradeOptions(select, grades, grades); 
-
-	// Click event to submit button in the form
+	// Click events to submit button in the form
 	if (currentPage.toLocaleLowerCase() == MY_COURSES_PAGE.toLocaleLowerCase()) {
-
-		//document.querySelector('#newMyCourseSubmit').addEventListener('click', addNewMyCourse);
+		
         document.querySelector('#newPersonSubmit').addEventListener('click', addNewPerson);
 		document.querySelector('#updatePersonSubmit').addEventListener('click', updatePerson);
 
@@ -176,17 +129,15 @@ async function createTableForPersons(persons, table) {
 }
 
 /**
- * Adds a new person to persons
+ * Adds a new person to persons-db
  */
 async function addNewPerson() { 
 		
     // Gets the data fron the html-form
-	const form = document.querySelector('#newPerson');
-    console.log(form)//TODO:remove!
+	const form = document.querySelector('#newPerson');    
 	const formBody = new FormData(form);
 	
-	// Adds the person to db
-	//await atlas.addPerson(formBody.get('firstName'), formBody.get('surName'),formBody.get('address'),formBody.get('socialSecurityNumber'),formBody.get('phone')).then(res => res.json());
+	// Adds the person to db	
 	const response = await atlas.addPerson(formBody.get('firstName'), formBody.get('surName'),formBody.get('address'),formBody.get('socialSecurityNumber'),formBody.get('phone')).then(res => res.json());
 
 	// Show error to the user
@@ -203,59 +154,31 @@ async function addNewPerson() {
 }
 
 /**
- *  Updates a course grade with selected grade
+ * Gets the person to be updated from the table and displays info on page
+ * @param {*} e the selected person
+ * @returns a person
  */
-async function updateMyCourse(e) {
-
-	// Gets the coursecode 
-	const code = e
-
-	// Gets the grade
-	const grade = document.getElementById(`select_`+code); //NYTT2022-11-29
-	
-	// Gets the value from select element select option
-	const value = grade.value	
-
-	// Upddates course grade
-	const updateMyCourse = await atlas.updateMyCourse(e, value).then(res => res.json());
-	const updateMyCourseIndex = courses.findIndex(obj => obj.courseCode == e); 
-	
-	courses[updateMyCourseIndex] = updateMyCourse;
-
-}
-
-//Getperson function first
 async function getPersonToUpdate(e) {
 	// Disables the button for submit a new person
 	disableButtonAddPerson();
-	const print = e
-
-	console.log(print);
-	
+		
 	// Enables the button for update a person
 	enableButtonUpdatePerson();
 
-	alert("Clicked!"); //TODO:remove!!
+	
 	// Gets the social security number
-	const socialSecurityNumber = e;
-	console.log(socialSecurityNumber); //TODO:remove!! //9
-	let fetchPerson; //TODO:remove!!	
+	const socialSecurityNumber = e;		
 
 	// Get the person
 	const getPersonPromise = atlas.getPerson(socialSecurityNumber)	
-	console.log("getPersonPromise :" +getPersonPromise); //TODO:remove!!
-	console.dir({"tses: " :getPersonPromise.firstName})
+	
 	const person = await getPersonPromise.then(async fetchPerson => {
 		return await fetchPerson.json();
+
+		//catch errors
 	}).catch(error => 
-		console.log(error));
-	
-	
-	
-	console.dir({"firstname " :person.firstName, "lastname " :person.surName, "social sec num ":person.socialSecurityNumber}); //TODO:remove!!
-	console.log("fetchPerson: " +fetchPerson) //TODO:remove!!
-	//SAmma hit på båda varianterna av ":"+
-	console.log("firstname :"+ person.firstname);
+		console.log(error)
+	);	
 
 	// Gets the input fields from html for displaying the data
 	const firstNameInput = document.getElementById('first-name-input');
@@ -268,10 +191,8 @@ async function getPersonToUpdate(e) {
 	firstNameInput.value = person.firstName;
 	surNameInput.value = person.surName;
 	addressInput.value = person.address;
-	socialSecurityNumberInput.value = person.socialSecurityNumber;//":"+person.socialSecurityNumber;
-	phoneInput.value = person.phone;
-	console.log("firstname :"+ person.firstname);
-	console.dir({"firstname " :person.firstName, "lastname " :person.surName, "social sec num ":person.socialSecurityNumber}); //TODO:remove!!
+	socialSecurityNumberInput.value = person.socialSecurityNumber;
+	phoneInput.value = person.phone;	
 	
 	// Enables the button for update a person
 	enableButtonUpdatePerson();
@@ -343,11 +264,13 @@ async function updatePerson(e) {
 	//updatePerson(firstName, surName, address, socialSecurityNumber, phone)
 	const response = await atlas.updatePerson(e,firstName, surName, address,  phone).then(res => res.json());
 
+
+
 	// Show error to the user
 	if (response.error) {		
 		alert(response.error);
 	} else {
-		alert("Person added!");
+		alert("Person updated!");		
 	// Refreshes the page
 		location.reload();
 	}	
