@@ -17,8 +17,6 @@ let currentPage = "index.html";
 /** An array of all persons to list on the page. */
 let persons = [];
 
-let courses = []; //TODO:to get rid of referene-error
-
 /** Limit the number of persons to show on the page. */
 const limit = 100;
 
@@ -163,8 +161,7 @@ async function getPersonToUpdate(e) {
 	disableButtonAddPerson();
 		
 	// Enables the button for update a person
-	enableButtonUpdatePerson();
-
+	enableButtonUpdatePerson();	
 	
 	// Gets the social security number
 	const socialSecurityNumber = e;		
@@ -200,71 +197,31 @@ async function getPersonToUpdate(e) {
 	return person //TODO:return necceserry?
 }
 
-async function updatePerson(e) {
-	
-	// // Disables the button for submit a new person
-	// disableButtonAddPerson();
+/**
+ * Updates a person from the information in the fields
+ * @param {*} e the person to update
+ */
+async function updatePerson(e) {	
 
-	// // Enables the button for update a person
-	// enableButtonUpdatePerson();
-
-	// alert("Clicked!"); //TODO:remove!!
-	// // Gets the social security number
-	// const socialSecurityNumber = e;
-	// console.log(socialSecurityNumber); //TODO:remove!!
-
-	// // Get the person
-	// const getPersonPromise = atlas.getPerson(socialSecurityNumber)	
-	
-	// const person = await getPersonPromise.then(async fetchPerson => {
-	// 	return await fetchPerson.json();
-	// });
-	
-
-	// // Gets the input fields from html for displaying the data
-	// const firstNameInput = document.getElementById('first-name-input');
-	// const surNameInput = document.getElementById('sur-name-input');
-	// const addressInput = document.getElementById('address-input');
-	// const socialSecurityNumberInput = document.getElementById('social-security-number-input');
-	// const phoneInput = document.getElementById('phone-input');
-
-	// // Set the values to the fields 
-	// firstNameInput.value = person.firstName;
-	// surNameInput.value = person.surName;
-	// addressInput.value = person.address;
-	// socialSecurityNumberInput.value = "XXXXXXXXXX"//person?.socialSecurityNumber;
-	// phoneInput.value = person.phone;
-
-	///ABOVE OLD
-	
-	const socialSecurityNumber = e; //TODO:neccecerry?
 	// Prevents the default form submission behavior
 	e.preventDefault();
 
-	// Get the person data
+	// Get the person data from input fields
 	const firstNameInput = document.getElementById('first-name-input');
 	const surNameInput = document.getElementById('sur-name-input');
 	const addressInput = document.getElementById('address-input');
 	const socialSecurityNumberInput = document.getElementById('social-security-number-input');
 	const phoneInput = document.getElementById('phone-input');
 
+	// Set values to be sent to person-db.json
 	const firstName = firstNameInput.value;
 	const surName = surNameInput.value;
-	const address = addressInput.value;
-	//const socialSecurityNumber = socialSecurityNumberInput.value;
+	const address = addressInput.value;	
 	e = socialSecurityNumberInput.value;
 	const phone = phoneInput.value;
-
-	console.log("firstName  :"+firstName ); //TODO: remove all console.log!
-	console.log("lasttName  :"+surName );
-	console.log("address  :"+address );
-	console.log("socialsecNum  :"+e );
-	console.log("phone  :"+phone );
-
-	//updatePerson(firstName, surName, address, socialSecurityNumber, phone)
+	
+	// Sends the new values to the file
 	const response = await atlas.updatePerson(e,firstName, surName, address,  phone).then(res => res.json());
-
-
 
 	// Show error to the user
 	if (response.error) {		
@@ -275,11 +232,8 @@ async function updatePerson(e) {
 		location.reload();
 	}	
 
-	// Refreshes the page	
-	//form.reset();
-
-	disableButtonUpdatePerson();	
-		
+	// Disables the button for update person
+	disableButtonUpdatePerson();
 
 }
 
@@ -298,7 +252,7 @@ function disableButtonUpdatePerson() {
  */
 function enableButtonUpdatePerson() {
 
-	const updatePersonButton = document.getElementById('updatePersonSubmit');
+	const updatePersonButton = document.getElementById('updatePersonSubmit');	
 	updatePersonButton.disabled = false;
 
 };
@@ -344,36 +298,6 @@ async function deletePerson(e) {
 };
 
 /**
-* Create option elements for the specified select element.
-* @param selectElement the select element to create and add option elements for
-* @param grades an array of grades to create option elements for
-* @param selectedGrade the grade to be the selected option in the selectElement
-*/
-function createGradeOptions(selectElement, grades, selectedGrade) {
-	grades = ["-","fx","f","e","d","c","b","a"];  //TODO:remove!		
-	// For each grade 
-	for(let grade of grades) {
-		
-		// Create an option element
-		const option = document.createElement("option");
-		console.log("grade: ") //TODO:remove!
-		console.log(grade) //TODO:remove!
-		
-		// Add the text of the grade to the option
-		option.innerText = grade.toUpperCase(); //TODO:blir fel här med uppercase
-		
-		// Add the option the selectElement
-		selectElement.appendChild(option)
-		
-	}	
-	console.log("grades: ")
-	console.log(grades)
-	// Set selectedGrade from myCourses
-	selectElement.value = selectedGrade	
-	
-}
-
-/**
 * Create a data cell (td element) with the specified text
 * @param text the text to to be displayed in the data cell
 * @param tr the table row to add the data cell to
@@ -388,61 +312,6 @@ function createTd(text, tr, extra) {
 	}
 
 	tr.appendChild(td);
-}
-
-function addPhoneListeners() { //TODO:remove!
-	// Få tag på tabellen
-	var table = document.getElementById("persons_table");
-
-	// Loopa igenom alla celler i tabellen
-	for (var i = 0; i < table.rows.length; i++) {
-  		for (var j = 0; j < table.rows[i].cells.length; j++) {
-    		// Lägg till en lyssnare på varje cell
-    		table.rows[i].cells[j].addEventListener("click", function() {
-      			// Ta bort alla textrutor som finns i tabellen
-      			removeInputs();
-
-      			// Hämta cellen som klickades på
-      			var cell = this;
-
-      			// Skapa en textruta och lägg till den i cellen
-      			var input = document.createElement("input");
-      			input.type = "text";
-      			input.value = cell.innerHTML;
-      			cell.innerHTML = "";
-      			cell.appendChild(input);
-      			input.focus();
-
-      			// Skapa en knapp och lägg till den i cellen
-      			var button = document.createElement("button");
-      			button.innerHTML = "Spara";
-      			cell.appendChild(button);
-
-      			// Lägg till en lyssnare på knappen
-      			button.addEventListener("click", function() {
-        		// Uppdatera värdet i tabellen med det nya värdet från textrutan
-        		cell.innerHTML = input.value;
-      		});
-    	});
-  	}
-}
-
-// En hjälpfunktion för att ta bort alla textrutor från tabellen
-function removeInputs() {
-  var inputs = document.getElementsByTagName("input");
-  while (inputs.length > 0) {
-    inputs[0].parentNode.innerHTML = inputs[0].value;
-  }
-}
-
-}
-
-/**
- * Perform a search for courses matching the text entered in the search input.
- */
-function searchCourses() {
-	// A re-creation of the table will filter out the courses not matching the searched value
-	createTable();
 }
 
 document.addEventListener('DOMContentLoaded', starterFunction);
