@@ -9,7 +9,7 @@ const dataSource = new RESTDataSource("http://localhost:3000");
 const atlas = new Atlas(dataSource);
 
 /** The name of the page displaying the list of Persons */
-const MY_COURSES_PAGE = "my-courses.html";
+const PERSON_PAGE = "index.html";
 
 /** The name of the page curretly beeing displayed */
 let currentPage = "index.html";
@@ -31,7 +31,7 @@ function starterFunction() {
 	
 	
 	// Get the list of persons from Atlas
-	const personPromise = currentPage == MY_COURSES_PAGE ? atlas.getPersons() : atlas.getPersons()	
+	const personPromise = currentPage == PERSON_PAGE ? atlas.getPersons() : atlas.getPersons()	
 	personPromise
 	.then(async fetchedPersons => {
 		persons = await fetchedPersons.json();
@@ -47,7 +47,7 @@ function starterFunction() {
 function createTable() {	
 
 	// Descide the function to be used when creaing the HTML tabel
-	const tableCreator = currentPage == MY_COURSES_PAGE ? createTableForPersons : createTableForPersons//TODO: to get it right//createTableForMiunCourses;
+	const tableCreator = currentPage == PERSON_PAGE ? createTableForPersons : createTableForPersons//TODO: to get it right//createTableForMiunCourses;
 	
     // Keep the original course array intact by assigning the filterad courses to a new array
     let personsToList = persons
@@ -117,7 +117,7 @@ async function createTableForPersons(persons, table) {
 	
 
 	// Click events to submit button in the form
-	if (currentPage.toLocaleLowerCase() == MY_COURSES_PAGE.toLocaleLowerCase()) {
+	if (currentPage.toLocaleLowerCase() == PERSON_PAGE.toLocaleLowerCase()) {
 		
         document.querySelector('#newPersonSubmit').addEventListener('click', addNewPerson);
 		document.querySelector('#updatePersonSubmit').addEventListener('click', updatePerson);
@@ -227,7 +227,7 @@ async function updatePerson(e) {
 	if (response.error) {		
 		alert(response.error);
 	} else {
-		alert("Person updated!");		
+		alert(firstName +" "+surName +" updated!");		
 	// Refreshes the page
 		location.reload();
 	}	
