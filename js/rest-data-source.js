@@ -42,9 +42,9 @@ export class RESTDataSource extends DataSource {
 	* @param socialSecurityNumber the course code of the course to get
 	* @return a Promise that resolves to a person object or {} if the person doesn't exist
 	*/
-	async getPerson(socialSecurityNumber) { 	
+	async getPerson(socialSecurityNumber) {		
 		
-		return this.getData('/api/persons/:' + socialSecurityNumber);
+		return this.getData('/api/persons/' + socialSecurityNumber);
 		
 	}
 

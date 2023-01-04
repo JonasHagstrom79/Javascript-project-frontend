@@ -199,7 +199,7 @@ async function getPersonToUpdate(e) {
 	const nameTag = document.getElementById('nameTag');
 	nameTag.innerText = "Update " +firstNameInput.value + " "+ surNameInput.value;
 	
-	// 
+	// Scrolls to element for update person
 	nameTag.scrollIntoView();
 	
 	// Enables the button for update a person
