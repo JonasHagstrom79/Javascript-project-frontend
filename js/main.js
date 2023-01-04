@@ -114,11 +114,12 @@ async function createTableForPersons(persons, table) {
 	});
 	
 
-	// Click events to submit button in the form
+	// Click events to submit, update -button and social security number visibility in the form
 	if (currentPage.toLocaleLowerCase() == PERSON_PAGE.toLocaleLowerCase()) {
 		
         document.querySelector('#newPersonSubmit').addEventListener('click', addNewPerson);
 		document.querySelector('#updatePersonSubmit').addEventListener('click', updatePerson);
+		document.querySelector('#toggle-visibility').addEventListener('click', toggleVisibility);
 
 	};
 	
@@ -132,6 +133,8 @@ async function addNewPerson() {
     // Gets the data fron the html-form
 	const form = document.querySelector('#newPerson');    
 	const formBody = new FormData(form);
+
+	//toggleVisibility();
 	
 	// Adds the person to db	
 	const response = await atlas.addPerson(formBody.get('firstName'), formBody.get('surName'),formBody.get('address'),formBody.get('socialSecurityNumber'),formBody.get('phone')).then(res => res.json());
@@ -314,5 +317,21 @@ function createTd(text, tr, extra) {
 
 	tr.appendChild(td);
 }
+
+/**
+ * Toggles the visibility for social security number
+ */
+function toggleVisibility() {
+	// Getting the element
+	const socialSecurityNumber = document.getElementById("social-security-number-input");
+	
+	if (socialSecurityNumber.type === "password") {
+		// Set the text to be visible(text)
+		socialSecurityNumber.type = "text";
+	} else {
+		// Set the text to be hidden(password)
+		socialSecurityNumber.type = "password";
+	}
+  }
 
 document.addEventListener('DOMContentLoaded', starterFunction);

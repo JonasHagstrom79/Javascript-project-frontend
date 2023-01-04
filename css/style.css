@@ -71,5 +71,19 @@ body {
   
   .course-name {
     width: 70%;
-  }
+  }  
+
+  label {
+    display: inline-block;
+    position: relative;
+  }  
+  
+  img {
+    display: inline-block;
+    vertical-align: middle;
+    width: 25px;
+    height: 25px;
+    cursor: pointer;
+  }  
+ 
   
