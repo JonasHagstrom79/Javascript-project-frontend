@@ -140,7 +140,7 @@ async function addNewPerson() {
 	if (response.error) {		
 		alert(response.error);
 	} else {
-		alert("Person added!");
+		alert(response.firstName +" "+response.surName +" added!");
 		// Refreshes the page
 		location.reload();
 		// Refreshes the form	
@@ -198,6 +198,9 @@ async function getPersonToUpdate(e) {
 	// Displays the name of the person to be updated in h3 element
 	const nameTag = document.getElementById('nameTag');
 	nameTag.innerText = "Update " +firstNameInput.value + " "+ surNameInput.value;
+	
+	// 
+	nameTag.scrollIntoView();
 	
 	// Enables the button for update a person
 	enableButtonUpdatePerson();	
@@ -287,7 +290,7 @@ async function deletePerson(e) {
 	const result = persons.filter(person => person.socialSecurityNumber !== deletedPerson.socialSecurityNumber);
 	
 	// Alert for the user
-	alert("Person deleted!");
+	alert(deletedPerson.firstName + " " +deletedPerson.surName + " deleted!");
 
 	// Refreshes the page
 	location.reload();
