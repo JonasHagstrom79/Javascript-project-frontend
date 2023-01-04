@@ -193,7 +193,11 @@ async function getPersonToUpdate(e) {
 	surNameInput.value = person.surName;
 	addressInput.value = person.address;
 	socialSecurityNumberInput.value = person.socialSecurityNumber;//maskedSocialSecurityumber;
-	phoneInput.value = person.phone;	
+	phoneInput.value = person.phone;
+	
+	// Displays the name of the person to be updated in h3 element
+	const nameTag = document.getElementById('nameTag');
+	nameTag.innerText = "Update " +firstNameInput.value + " "+ surNameInput.value;
 	
 	// Enables the button for update a person
 	enableButtonUpdatePerson();	
@@ -217,7 +221,7 @@ async function updatePerson(e) {
 	const addressInput = document.getElementById('address-input');
 	const socialSecurityNumberInput = document.getElementById('social-security-number-input');
 	const phoneInput = document.getElementById('phone-input');
-	
+		
 	// Set values to be sent to person-db.json
 	const firstName = firstNameInput.value;
 	const surName = surNameInput.value;
