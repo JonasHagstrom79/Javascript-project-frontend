@@ -27,8 +27,6 @@ const limit = 100;
 function starterFunction() {
 	// Get the name of the current page
 	currentPage = window.location.pathname.split("/").find(str => str.includes(".html"));
-
-	
 	
 	// Get the list of persons from Atlas
 	const personPromise = currentPage == PERSON_PAGE ? atlas.getPersons() : atlas.getPersons()	
@@ -106,10 +104,10 @@ async function createTableForPersons(persons, table) {
 		btnDelete.innerText = 'Delete';
 		btnDelete.socialSecurityNumber = person.socialSecurityNumber;
 		// Add listener to the button
-		btnDelete.addEventListener('click', _event => deletePerson(person.socialSecurityNumber));
+		btnDelete.addEventListener('click', () => deletePerson(person.socialSecurityNumber));
 		_td.appendChild(btnDelete);
 		tr.appendChild(_td);
-
+		
 		// Add the row to the table
 		table.appendChild(tr);		
 		
@@ -145,10 +143,10 @@ async function addNewPerson() {
 		alert("Person added!");
 		// Refreshes the page
 		location.reload();
-	}	
-
-	// Refreshes the page	
-	form.reset();		
+		// Refreshes the form	
+		form.reset();	
+	}
+			
 }
 
 /**
@@ -184,17 +182,21 @@ async function getPersonToUpdate(e) {
 	const socialSecurityNumberInput = document.getElementById('social-security-number-input');
 	const phoneInput = document.getElementById('phone-input');
 
+	// Disables the field for social security number
+	socialSecurityNumberInput.disabled = true;
+	
+	// Masks the digits of social security number	
+	socialSecurityNumberInput.type = "password";	
+
 	// Set the values to the fields 
 	firstNameInput.value = person.firstName;
 	surNameInput.value = person.surName;
 	addressInput.value = person.address;
-	socialSecurityNumberInput.value = person.socialSecurityNumber;
+	socialSecurityNumberInput.value = person.socialSecurityNumber;//maskedSocialSecurityumber;
 	phoneInput.value = person.phone;	
 	
 	// Enables the button for update a person
-	enableButtonUpdatePerson();
-	
-	return person //TODO:return necceserry?
+	enableButtonUpdatePerson();	
 }
 
 /**
@@ -206,13 +208,16 @@ async function updatePerson(e) {
 	// Prevents the default form submission behavior
 	e.preventDefault();
 
+	let test = e.socialSecurityNumber
+	console.log(test);
+
 	// Get the person data from input fields
 	const firstNameInput = document.getElementById('first-name-input');
 	const surNameInput = document.getElementById('sur-name-input');
 	const addressInput = document.getElementById('address-input');
 	const socialSecurityNumberInput = document.getElementById('social-security-number-input');
 	const phoneInput = document.getElementById('phone-input');
-
+	
 	// Set values to be sent to person-db.json
 	const firstName = firstNameInput.value;
 	const surName = surNameInput.value;
@@ -228,12 +233,11 @@ async function updatePerson(e) {
 		alert(response.error);
 	} else {
 		alert(firstName +" "+surName +" updated!");		
-	// Refreshes the page
+		// Disables the button for update person
+		disableButtonUpdatePerson();
+		// Refreshes the page
 		location.reload();
-	}	
-
-	// Disables the button for update person
-	disableButtonUpdatePerson();
+	}
 
 }
 
@@ -264,16 +268,6 @@ function disableButtonAddPerson() {
 
 	const addButton = document.getElementById('newPersonSubmit');
 	addButton.disabled = true;
-
-}
-
-/**
- * Enables the button Add person
- */
-function enableButtonAddPerson() {
-
-	const addButton = document.getElementById('newPersonSubmit');
-	addButton.disabled = false;
 
 }
 
