@@ -8,29 +8,19 @@ const dataSource = new RESTDataSource("http://localhost:3000");
 /** The Atlas instance */
 const atlas = new Atlas(dataSource);
 
-/** The name of the page displaying the list of Persons */
-const PERSON_PAGE = "index.html";
-
-/** The name of the page curretly beeing displayed */
-let currentPage = "index.html";
-
 /** An array of all persons to list on the page. */
 let persons = [];
 
 /** Limit the number of persons to show on the page. */
 const limit = 100;
 
-
 /**
  * Handles initialization of the app.
  */
 function starterFunction() {
-	// Get the name of the current page
-	currentPage = window.location.pathname.split("/").find(str => str.includes(".html"));
 	
 	// Get the list of persons from Atlas
-	const personPromise = currentPage == PERSON_PAGE ? atlas.getPersons() : atlas.getPersons()	
-	personPromise
+	atlas.getPersons()
 	.then(async fetchedPersons => {
 		persons = await fetchedPersons.json();
 				
@@ -44,23 +34,20 @@ function starterFunction() {
 */
 function createTable() {	
 
-	// Descide the function to be used when creaing the HTML tabel
-	const tableCreator = currentPage == PERSON_PAGE ? createTableForPersons : createTableForPersons//TODO: to get it right//createTableForMiunCourses;
-	
-    // Keep the original course array intact by assigning the filterad courses to a new array
-    let personsToList = persons
+	// Keep the original persons array intact by assigning the filterad personss to a new array
+	let personsToList = persons
 
-    // Sorting the array by surname alpabetically
+	// Sorting the array by surname alpabetically
 	personsToList = personsToList.sort((a, b) => a.surName.localeCompare(b.surName)).slice(0, limit); // limit the number of courses to display
-
+ 
 	// Clear any existing data in the table
 	const table = document.getElementById("persons_table");
 	table.innerHTML = null;
-	
+	 
 	// Create the table 	
-	tableCreator(personsToList, table);
-}
+	createTableForPersons(personsToList, table);
 
+}
 
 /**
 * Create table rows for all persons in the array.
@@ -112,17 +99,13 @@ async function createTableForPersons(persons, table) {
 		table.appendChild(tr);		
 		
 	});
-	
 
-	// Click events to submit, update -button and social security number visibility in the form
-	if (currentPage.toLocaleLowerCase() == PERSON_PAGE.toLocaleLowerCase()) {
+	// Add listeners to the page
+	document.querySelector('#newPersonSubmit').addEventListener('click', addNewPerson);
+	document.querySelector('#updatePersonSubmit').addEventListener('click', updatePerson);
+	document.querySelector('#toggle-visibility').addEventListener('click', toggleVisibility);
+	//document.querySelector('#social-security-number-input').addEventListener('keyup', inputHideDelay);
 		
-        document.querySelector('#newPersonSubmit').addEventListener('click', addNewPerson);
-		document.querySelector('#updatePersonSubmit').addEventListener('click', updatePerson);
-		document.querySelector('#toggle-visibility').addEventListener('click', toggleVisibility);
-
-	};
-	
 }
 
 /**
@@ -318,20 +301,39 @@ function createTd(text, tr, extra) {
 	tr.appendChild(td);
 }
 
+let isVisible = false;
 /**
  * Toggles the visibility for social security number
  */
-function toggleVisibility() {
+function toggleVisibility() {	
+		
 	// Getting the element
 	const socialSecurityNumber = document.getElementById("social-security-number-input");
-	
+		
 	if (socialSecurityNumber.type === "password") {
-		// Set the text to be visible(text)
+	 	// Set the text to be visible(text)
 		socialSecurityNumber.type = "text";
+			
 	} else {
 		// Set the text to be hidden(password)
 		socialSecurityNumber.type = "password";
-	}
-  }
+	};
+
+};
+
+
+function inputHideDelay() {	
+	
+	//FUNGERAR//////
+	let socialSecurityNumber = document.getElementById("social-security-number-input");
+	let value = socialSecurityNumber.value;
+
+	setTimeout(function() {
+		socialSecurityNumber.value = '*'.repeat(value.length);
+		socialSecurityNumber.setSelectionRange(value.length, value.length);
+	}, 500);
+	//FUNGERAR//////
+	
+};
 
 document.addEventListener('DOMContentLoaded', starterFunction);
