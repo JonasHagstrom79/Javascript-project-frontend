@@ -2,8 +2,7 @@ import { Atlas } from './atlas.js';
 import { RESTDataSource } from './rest-data-source.js';
 
 /** The data source for our Atlas */
-//const dataSource = new RESTDataSource("https://caha1906-lab1-backend-dt190g.azurewebsites.net/");
-const dataSource = new RESTDataSource("http://localhost:3000");
+const dataSource = new RESTDataSource("https://caha1906-project-backend-dt190g-ht22.azurewebsites.net/");
 
 /** The Atlas instance */
 const atlas = new Atlas(dataSource);
@@ -43,7 +42,7 @@ function createTable() {
 	// Clear any existing data in the table
 	const table = document.getElementById("persons_table");
 	table.innerHTML = null;
-	 
+	
 	// Create the table 	
 	createTableForPersons(personsToList, table);
 
@@ -301,39 +300,26 @@ function createTd(text, tr, extra) {
 	tr.appendChild(td);
 }
 
-let isVisible = false;
+// Declare a variable to store the user's input
+let isClicked = false;
+
 /**
  * Toggles the visibility for social security number
  */
 function toggleVisibility() {	
-		
+	
 	// Getting the element
 	const socialSecurityNumber = document.getElementById("social-security-number-input");
 		
 	if (socialSecurityNumber.type === "password") {
-	 	// Set the text to be visible(text)
-		socialSecurityNumber.type = "text";
+		// Set the text to be visible(text)
+	 	socialSecurityNumber.type = "text";
 			
 	} else {
-		// Set the text to be hidden(password)
-		socialSecurityNumber.type = "password";
+	 	// Set the text to be hidden(password)
+	 	socialSecurityNumber.type = "password";
 	};
 
-};
-
-
-function inputHideDelay() {	
-	
-	//FUNGERAR//////
-	let socialSecurityNumber = document.getElementById("social-security-number-input");
-	let value = socialSecurityNumber.value;
-
-	setTimeout(function() {
-		socialSecurityNumber.value = '*'.repeat(value.length);
-		socialSecurityNumber.setSelectionRange(value.length, value.length);
-	}, 500);
-	//FUNGERAR//////
-	
 };
 
 document.addEventListener('DOMContentLoaded', starterFunction);
