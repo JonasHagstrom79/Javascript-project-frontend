@@ -229,6 +229,9 @@ async function updatePerson(e) {
 		disableButtonUpdatePerson();
 		// Refreshes the page
 		location.reload();
+		// Refreshes the form
+		const form = document.querySelector('#newPerson');  
+		form.reset();	
 	}
 
 }
