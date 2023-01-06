@@ -102,8 +102,7 @@ async function createTableForPersons(persons, table) {
 	// Add listeners to the page
 	document.querySelector('#newPersonSubmit').addEventListener('click', addNewPerson);
 	document.querySelector('#updatePersonSubmit').addEventListener('click', updatePerson);
-	document.querySelector('#toggle-visibility').addEventListener('click', toggleVisibility);
-	//document.querySelector('#social-security-number-input').addEventListener('keyup', inputHideDelay);
+	document.querySelector('#toggle-visibility').addEventListener('click', toggleVisibility);	
 		
 }
 
@@ -302,9 +301,6 @@ function createTd(text, tr, extra) {
 
 	tr.appendChild(td);
 }
-
-// Declare a variable to store the user's input
-let isClicked = false;
 
 /**
  * Toggles the visibility for social security number
