@@ -197,10 +197,7 @@ async function getPersonToUpdate(e) {
 async function updatePerson(e) {	
 
 	// Prevents the default form submission behavior
-	e.preventDefault();
-
-	let test = e.socialSecurityNumber
-	console.log(test);
+	e.preventDefault();	
 
 	// Get the person data from input fields
 	const firstNameInput = document.getElementById('first-name-input');
